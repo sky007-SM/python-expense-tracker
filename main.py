@@ -19,9 +19,11 @@ class ExpenseEntries(TypedDict):
 
 type expense_entries = ExpenseEntries
 
-# Constants for File Location and File Header
+# Constants for File Location and File Header and Entry Format Specifiers
 EXPENSES_FILE_NAME: str = "file-manager/text-files/expenses.txt"
 EXPENSE_TRACKER_HEADER: str = "CATEGORY | ITEM_NAME | ITEM_COST | DATE\n"
+FORMAT_TYPE_1: str = r"^[a-zA-Z0-9]+\s\:\s[a-zA-Z0-9]+\s\:\s\$\d+\s\:\s\d+\-\d+\-\d+$"
+FORMAT_TYPE_2: str = r"^\w+\s\|\s\w+\s\|\s\w+\s\|\s\w+$"
 
 
 # Function that deletes expenses history
@@ -37,11 +39,28 @@ def view_expenses(counter: int) -> Iterator[str]:
     try:
         # File open in read mode for accessing data
         with open(EXPENSES_FILE_NAME, "r") as file:
-            line: str
-            for line in file:
-                if counter > 0:
-                    yield line  # Generator used for streaming file content
-                counter += 1  # Used to eliminate and include Header in record produced
+            # Conditions for file format integrity preservation
+            if counter == 0:
+                line: str
+                format_match: bool = False
+                for line in file:
+                    format_match = search(FORMAT_TYPE_1,line)
+                    if counter > 0:
+                        if format_match:
+                            yield line  # Generator used for streaming file content
+                    counter += 1  # Used to eliminate and include Header in record produced
+            else:
+                line: str
+                format_match: bool = False
+                for line in file:
+                    if counter == 1:
+                        format_match = search(FORMAT_TYPE_2,line)
+                    else:
+                        format_match = search(FORMAT_TYPE_1,line)
+                    if counter > 0:
+                        if format_match:
+                            yield line  # Generator used for streaming file content
+                    counter += 1  # Used to eliminate and include Header in record produced
     # Handles File not found error
     except FileNotFoundError:
         print(f"Sorry, the file {EXPENSES_FILE_NAME} does not exist")
@@ -60,8 +79,6 @@ def add_item() -> str:
         )  # Search method to check expression format with
         if format_match:
             break
-        else:
-            print("Error: Invalid input, enter a number")
         print("Error: Invalid Input Enter a number")
     now: datetime = datetime.now()  # Date time variable initialised
     entry_date: str = now.strftime("%Y-%m-%d")  # Date collected as string
@@ -170,6 +187,7 @@ def menu() -> None:
         elif choice == "3":
             show_summary()
         elif choice == "4":
+            print(f"Warning: You cannot restore deleted records")
             confirm: str = (
                 input("Are you sure you want to delete expense history (y/n): ")
                 .lower()
@@ -209,7 +227,7 @@ def main() -> None:
             break
         if title != EXPENSE_TRACKER_HEADER:  # Condition that adds header if not present
             record_list: list[str] = list(
-                view_expenses(1)
+                view_expenses(0)
             )  # Invokes view expenses and stores entire file in temporary list
             file.seek(0)
             file.truncate()  # Deletes all content via the file within currently opened instance

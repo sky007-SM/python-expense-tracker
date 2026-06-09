@@ -1,6 +1,6 @@
 # Python Expense Tracker
 
-A command-line expense tracking application written in Python that allows users to record expenses, store them in a text file, analyze spending habits, identify costly purchases, and compare expenses against a budget.
+A command-line expense tracking application written in Python that allows users to record expenses, store them in a text file, analyze spending habits, identify costly purchases, compare expenses against a budget, and recover valid data from partially corrupted expense files.
 
 ## Features
 
@@ -17,6 +17,8 @@ A command-line expense tracking application written in Python that allows users 
 * Budget overrun warnings
 * Expense history deletion
 * Header validation and file repair
+* Corrupted record detection
+* Automatic recovery of valid expense entries
 * Generator-based file reading
 * Decimal expense support
 * Input validation using regular expressions
@@ -106,7 +108,40 @@ The application stores expenses in a plain text file and automatically maintains
 CATEGORY | ITEM_NAME | ITEM_COST | DATE
 ```
 
-If the header is missing or corrupted, the application automatically restores it while preserving existing expense records.
+If the header is missing or corrupted, the application automatically restores it while preserving valid expense records.
+
+## Data Integrity & Recovery
+
+The application validates both expense records and file headers using regular expressions.
+
+If the expense file is modified, partially corrupted, or contains invalid entries:
+
+* Invalid records are ignored automatically
+* Valid expense records are preserved
+* The file header is restored if missing or corrupted
+* Recoverable expense entries remain accessible
+* Expense summaries are generated only from valid records
+
+This allows the application to recover usable data from a partially damaged or manually edited expense file while maintaining data integrity.
+
+### Example
+
+Corrupted file:
+
+```text
+CATEGORY | ITEM_NAME | ITEM_COST | DATE
+Food : Burger : $150 : 2026-06-08
+INVALID DATA HERE
+Transport : BusTicket : $40 : 2026-06-08
+Random Corrupted Text
+```
+
+Recovered records:
+
+```text
+Food : Burger : $150 : 2026-06-08
+Transport : BusTicket : $40 : 2026-06-08
+```
 
 ## Type Definitions
 
