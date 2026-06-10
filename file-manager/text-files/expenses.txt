@@ -1,7 +1,2 @@
 CATEGORY | ITEM_NAME | ITEM_COST | DATE
 Food : Cake : $29 : 2026-06-09
-Food : Cake : $29 : 2026-06-09
-Food : Cake : $29 : 2026-06-09
-Food : Cake : $29 : 2026-06-09
-Food : Cake : $29 : 2026-06-09
-Food : Cake : $29 : 2026-06-09
