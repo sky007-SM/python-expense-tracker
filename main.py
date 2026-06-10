@@ -19,7 +19,7 @@ class ExpenseEntries(TypedDict):
 
 type expense_entries = ExpenseEntries
 
-# Constants for File Location and File Header and Entry Format Specifiers
+# Constants for File Location, File Header and Data Format Specifiers
 EXPENSES_FILE_NAME: str = "file-manager/text-files/expenses.txt"
 EXPENSE_TRACKER_HEADER: str = "CATEGORY | ITEM_NAME | ITEM_COST | DATE\n"
 FORMAT_TYPE_1: str = r"^[a-zA-Z0-9]+\s\:\s[a-zA-Z0-9]+\s\:\s\$\d+\s\:\s\d+\-\d+\-\d+$"
