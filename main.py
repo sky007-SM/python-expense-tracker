@@ -43,24 +43,30 @@ def view_expenses(counter: int) -> Iterator[str]:
             if counter == 0:
                 line: str
                 format_match: bool = False
+                # Returns newline character as well with each line
                 for line in file:
-                    format_match = search(FORMAT_TYPE_1,line)
+                    format_match = search(FORMAT_TYPE_1, line)
                     if counter > 0:
                         if format_match:
                             yield line  # Generator used for streaming file content
-                    counter += 1  # Used to eliminate and include Header in record produced
+                    counter += (
+                        1  # Used to eliminate and include Header in record produced
+                    )
             else:
                 line: str
                 format_match: bool = False
+                # Returns newline character as well with each line
                 for line in file:
                     if counter == 1:
-                        format_match = search(FORMAT_TYPE_2,line)
+                        format_match = search(FORMAT_TYPE_2, line)
                     else:
-                        format_match = search(FORMAT_TYPE_1,line)
+                        format_match = search(FORMAT_TYPE_1, line)
                     if counter > 0:
                         if format_match:
                             yield line  # Generator used for streaming file content
-                    counter += 1  # Used to eliminate and include Header in record produced
+                    counter += (
+                        1  # Used to eliminate and include Header in record produced
+                    )
     # Handles File not found error
     except FileNotFoundError:
         print(f"Sorry, the file {EXPENSES_FILE_NAME} does not exist")
@@ -68,8 +74,8 @@ def view_expenses(counter: int) -> Iterator[str]:
 
 # Function that collects data and merges it to for an entry
 def add_item() -> str:
-    category: str = input("Enter Category of item: ").strip()
-    item_name: str = input("Enter name of item: ").strip()
+    category: str = input("Enter Category of item: ").strip().title()
+    item_name: str = input("Enter name of item: ").strip().tite()
     # Loop that Ensures only digits are entered
     while True:
         amount: str = input("Enter Cost of item: ").strip().lstrip("$")
@@ -117,7 +123,6 @@ def show_summary() -> None:
         "item_name": [],
         "item_cost": [],
         "item_entry_date": [],
-        "record_list": [],
     }
     entries_present: bool = False
     record: str
@@ -169,11 +174,11 @@ def menu() -> None:
         print(f"4. Clear Expense History")
         print(f"\n\n Quit -q\n")
 
-        choice: str = (input("Enter your choice (1, 2, 3, 4 or q): ")).lower()
+        choice: str = (input("Enter your choice (1, 2, 3, 4 or q): ")).lower().strip()
 
         while choice not in ["1", "2", "3", "4", "q"]:  # Handles Invalid choice input
             print("\nInvalid choice entry")
-            choice = input("Enter your choice (1, 2, 3, 4 or q): ").lower()
+            choice = input("Enter your choice (1, 2, 3, 4 or q): ").lower().strip()
         print("\n")
         if choice == "1":
             add_expense()
@@ -205,10 +210,10 @@ def menu() -> None:
             break
 
         print(f"\nReturn to Menu -r\t\t2. Quit -q ")
-        action: str = (input("Enter your choice (r/q): ")).lower()
+        action: str = (input("Enter your choice (r/q): ")).lower().strip()
         while action not in ["r", "q"]:  # Handles Invalid choice input
             print("\nInvalid choice entry")
-            action = input("Enter your choice (r/q): ")
+            action = input("Enter your choice (r/q): ").lower().strip()
 
         if action == "q":
             break
