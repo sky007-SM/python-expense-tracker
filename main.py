@@ -209,7 +209,7 @@ def menu() -> None:
         elif choice == "q":
             break
 
-        print(f"\nReturn to Menu -r\t\t2. Quit -q ")
+        print(f"\nReturn to Menu -r\t\t Quit -q ")
         action: str = (input("Enter your choice (r/q): ")).lower().strip()
         while action not in ["r", "q"]:  # Handles Invalid choice input
             print("\nInvalid choice entry")
